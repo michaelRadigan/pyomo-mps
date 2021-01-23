@@ -10,6 +10,7 @@ import math
 # Completely going for pure filth to just get this done asap.
 # TODO[michaelr]: Come back at some point in the future and make this sane
 
+# file_name = r"/Users/michaelradigan/pyomo-mps-parser/mps/enlight_hard.mps"
 file_name = r"/Users/michaelradigan/pyomo-mps-parser/mps/enlight8.mps"
 
 
