@@ -50,9 +50,6 @@ def to_expr(coefficients, variables):
 # If a constraint is not mentioned in the RHS section then it takes a RHS value of 0 so we will use that as our default
 constraints = {}
 
-# constraint_count is used to keep track of the index of each constraint
-constraint_count = 0
-
 # dictionary from variable name to a variable. Note that variables in MPs are from 0 to +inf by default
 variables = defaultdict(lambda: variable(lb=0, ub=None, domain=Integers))
 
@@ -243,7 +240,7 @@ with open(file_name) as f:
             # TODO[michaelr]: Not sure if we even want any checks here
             break
         else:
-            constraint_count = parse_line[current_state](line)
+            parse_line[current_state](line)
 
 
 # At this point, I think that we may have all of the things that we need, we should build the model!
