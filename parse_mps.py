@@ -8,7 +8,7 @@ from collections import defaultdict
 # Completely going for pure filth to just get this done asap.
 # TODO[michaelr]: Come back at some point in the future and make this sane
 
-file_name = r"/Users/michaelradigan/pyomosymmetry/mps/enlight9.mps"
+file_name = r"/Users/michaelradigan/pyomo-mps-parser/mps/enlight9.mps"
 
 
 class State(Enum):
@@ -33,8 +33,6 @@ constraints = {}
 
 # constraint_count is used to keep track of the index of each constraint
 constraint_count = 0
-
-# counts = Counts()
 
 # dictionary from variable name to a variable. Note that variables in MPs are from 0 to +inf by default
 variables = defaultdict(lambda: variable(lb=0, ub=None))
@@ -91,6 +89,21 @@ def parse_rhs(line):
 
     # TODO[michaelr]: implement me
     print(f"RHS: {line}")
+    # We're just going to throw away the vector name, I'm not sure that we have any use for it...
+    vector_name, constraint_name, limit = line.split()
+
+    constraint, constraint_type = constraints[constraint_name]
+
+    # From my reading of the pyomo kernel docs, it seems like ub is <= and rhs is ==
+    if constraint_type == ConstraintType.E:
+        # TODO:michaelr]: limiting to int for now
+        constraint.rhs = int(limit)
+    elif constraint_type == ConstraintType.G:
+        constraint.ub = limit
+    elif constraint_tuple == ConstraintType.L:
+        constraint.lb = limit
+    else:
+        raise Exception('unknown constraint type')
 
 
 def parse_bounds(line):
@@ -140,5 +153,5 @@ with open(file_name) as f:
         else:
             constraint_count = parse[current_state](line)
 
-print(variables)
-print(constraints)
+# print(variables)
+# print(constraints)
