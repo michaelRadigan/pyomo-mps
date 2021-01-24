@@ -1,5 +1,5 @@
 from .version import __version__
-from .parse_mps import parse
+from .parse import parse
 
 
 __all__ = [

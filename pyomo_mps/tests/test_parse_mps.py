@@ -1,5 +1,5 @@
-from pyomompsparser import parse
-import pyomo.kernel as pk
+from pyomo_mps import parse
+from pyomo.kernel import SolverFactory
 import os
 import pytest
 
@@ -19,5 +19,5 @@ def test_parse_enlight8(datafiles):
     file_path = os.path.join(dir_path, enlight8_file_name)
     assert os.path.isfile(file_path)
     model = parse(file_path)
-    pk.SolverFactory('cbc').solve(model)
+    SolverFactory('cbc').solve(model)
     assert model.o() == 27
