@@ -6,7 +6,6 @@ _here = os.path.abspath(os.path.dirname(__file__))
 
 # TODO[michaelr]: Could read a readme.rst for a long description here
 
-
 version = {}
 with open(os.path.join(_here, 'pyomo_mps', 'version.py')) as f:
     exec(f.read(), version)
