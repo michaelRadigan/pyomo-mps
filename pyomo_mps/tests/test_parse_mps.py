@@ -19,5 +19,6 @@ def test_parse_enlight8(datafiles):
     file_path = os.path.join(dir_path, enlight8_file_name)
     assert os.path.isfile(file_path)
     model = parse(file_path)
+    # Note that this test will fail if you do not have cbc installed and in your path
     SolverFactory('cbc').solve(model)
     assert model.o() == 27

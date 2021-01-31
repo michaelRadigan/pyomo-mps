@@ -8,17 +8,17 @@ _here = os.path.abspath(os.path.dirname(__file__))
 
 
 version = {}
-with open (os.path.join(_here, 'pyomo_mps', 'version.py')) as f:
+with open(os.path.join(_here, 'pyomo_mps', 'version.py')) as f:
     exec(f.read(), version)
 
 install_requires = ['pyomo']
-test_requires=['pytest', 'pytest-datafiles']
+test_requires = ['pytest', 'pytest-datafiles', 'pyutillib', 'ply']
 
 
 setup(
     name='pyomo-mps',
-    version=version['__version__']
-    description=('A quick, unfinished module to produce a pyomo model from a given mps file, adding functionality as and when I need it'),
+    version=version['__version__'],
+    description='A quick, unfinished module to produce a pyomo model from a given mps file, adding functionality as and when I need it',
     author='Michael Radigan',
     author_email='michael@radigan.co.uk',
     url='https://github.com/michaelRadigan/pyomo-mps',
