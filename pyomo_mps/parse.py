@@ -89,17 +89,7 @@ def parse_ui(variable, bound_limit):
     variable.ub = math.floor(bound_limit)
 
 
-def parse(filepath):
-    """ Parses the .mps file at the path and produces a pyomo model, unfinished and hacky at the moment!
-
-    Example usage (note that this assumes an installation of cbc, although any pyomo compatible solver would work)
-
-    import parse_mps
-    model = parse_mps.parse("/Users/michaelradigan/pyomo-mps-parser/mps/enlight8.mps")
-    opt = pk.SolverFactory('cbc').solve(model)
-    opt.write()
-    print(model.o())    
-    """
+def parse_raw(filepath):
     # Dictionary from constraintname to a linear_constraint as defined by the the ROWS section
     # If a constraint is not mentioned in the RHS section then it takes a RHS value of 0 so we will use that as our default
     constraints = {}
@@ -238,9 +228,10 @@ def parse(filepath):
                 break
             else:
                 parse_line[current_state](line)
-        # At this point, I think that we may have all of the things that we need, we should build the model!
-    model = block()
-    model.vd = variable_dict(dict(variables))
+    # At this point, I think that we may have all of the things that we need, we should build the model!
+
+    #model = block()
+    #model.vd = variable_dict(dict(variables))
 
     # We're doing a fair bit of extra work here
     # There must be a much nicer and more efficient way to do this but it's not really very important for now
@@ -249,12 +240,46 @@ def parse(filepath):
 
     obj_expr = sum(
         [c*v for c, v in zip(objective._coefficients, objective._variables)])
-    model.o = pck.objective.objective(obj_expr)
+    #model.o = pck.objective.objective(obj_expr)
 
     normal_constaints = {k: c for k, (c, t) in constraints.items()
                          if t != ConstraintType.N}
 
     if len(normal_constaints) + 1 != len(constraints):
         raise Exception("We only support having a single objective function")
+    #model.c = constraint_dict(normal_constaints)
+    # return model
+    return obj_expr, normal_constaints, variables
+
+
+def build_model(obj_expr, normal_constaints, variables):
+    model = block()
+    model.vd = variable_dict(dict(variables))
+    model.o = pck.objective.objective(obj_expr)
     model.c = constraint_dict(normal_constaints)
     return model
+
+
+def parse(filepath):
+    """ Parses the .mps file at the path and produces a pyomo model, unfinished and hacky at the moment!
+
+    Example usage (note that this assumes an installation of cbc, although any pyomo compatible solver would work)
+
+    import parse_mps
+    model = parse_mps.parse("/Users/michaelradigan/pyomo-mps-parser/mps/enlight8.mps")
+    opt = pk.SolverFactory('cbc').solve(model)
+    opt.write()
+    print(model.o())    
+    """
+    obj_expr, normal_constaints, variables = parse_raw(filepath)
+    return build_model(obj_expr, normal_constaints, variables)
+
+    #obj_expr, normal_constaints, variables = parse_raw(filepath)
+
+    #model = block()
+    #model.vd = variable_dict(dict(variables))
+
+    #model.o = pck.objective.objective(obj_expr)
+
+    #model.c = constraint_dict(normal_constaints)
+    # return model
